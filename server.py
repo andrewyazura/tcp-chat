@@ -40,7 +40,6 @@ class ChatServer:
 
                     print(f"New connection in queue: {address}.")
                     print(f"Users in queue: {self.waiting_queue.qsize()}.")
-                    print()
                     continue
 
                 except queue.Full:
@@ -59,7 +58,6 @@ class ChatServer:
 
         print(f"New connection: {formatted_address}.")
         print(f"Simultaneous connections: {len(self.connections)}.")
-        print()
 
         thread = threading.Thread(target=self.listen, args=(conn, formatted_address))
         thread.start()
@@ -73,6 +71,15 @@ class ChatServer:
         while True:
             try:
                 message = protocol.read(conn)
+                print(f"{address} - {message!r}")
+
+                if message.startswith("/"):
+                    command, *args = message[1:].split()
+
+                    if command == "disconnect":
+                        self.disconnect(address)
+                        break
+
                 self.broadcast(f"{address}: {message}", address)
 
             except (BrokenPipeError, ConnectionResetError):
@@ -90,14 +97,15 @@ class ChatServer:
             self.disconnect(address)
 
     def disconnect(self, address):
+        self.connections[address].close()
         self.connections.pop(address)
+
         self.broadcast(f"{address} has disconnected.", address)
 
         print(f"Connection closed: {address}.")
         print(f"Simultaneous connections: {len(self.connections)}.")
-        print()
 
-        # TODO: check queue and let next user in
+        self.check_queue()
 
     def check_queue(self):
         if not self.waiting_queue.empty():
