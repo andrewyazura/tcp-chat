@@ -59,6 +59,8 @@ class ChatServer:
         protocol.write(conn, f"Welcome, {formatted_address}!")
         protocol.write(conn, f"There are {len(self.connections)} users connected.")
 
+        self.broadcast(f"{formatted_address} has connected.", formatted_address)
+
         print(f"New connection: {formatted_address}.")
         print(f"Simultaneous connections: {len(self.connections)}.")
 
@@ -124,20 +126,15 @@ class ChatServer:
             self.accept_connection(conn, conn.getsockname())
 
 
-@click.group()
-def cli():
-    pass
-
-
-@cli.command()
+@click.command()
 @click.option("-h", "--host", default="127.0.0.1", help="Hostname or IP address.")
 @click.option("-p", "--port", default=8888, help="Port number.")
 @click.option("--max-connections", default=0, help="Maximum number of connections.")
 @click.option("--max-waiting-queue", default=0, help="Maximum number of waiting queue.")
-def start(host, port, max_connections, max_waiting_queue):
+def main(host, port, max_connections, max_waiting_queue):
     server = ChatServer(host, port, max_connections, max_waiting_queue)
     server.start()
 
 
 if __name__ == "__main__":
-    cli()
+    main()
