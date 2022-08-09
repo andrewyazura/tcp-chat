@@ -3,6 +3,7 @@ import random
 import socket
 import threading
 
+import click
 import colorama
 
 from message_protocol import MessageProtocol as protocol
@@ -17,6 +18,8 @@ class ChatServer:
 
         self.sock = socket.create_server((self.host, self.port))
         self.sock.listen()
+
+        print(f"Started on {self.host}:{self.port}.")
 
         self.connections = {}
         self.max_connections = max_connections
@@ -113,6 +116,20 @@ class ChatServer:
             self.accept_connection(conn, conn.getsockname())
 
 
-if __name__ == "__main__":
-    server = ChatServer("localhost", 8888)
+@click.group()
+def cli():
+    pass
+
+
+@cli.command()
+@click.option("-h", "--host", default="127.0.0.1", help="Hostname or IP address.")
+@click.option("-p", "--port", default=8888, help="Port number.")
+@click.option("--max-connections", default=0, help="Maximum number of connections.")
+@click.option("--max-waiting-queue", default=0, help="Maximum number of waiting queue.")
+def start(host, port, max_connections, max_waiting_queue):
+    server = ChatServer(host, port, max_connections, max_waiting_queue)
     server.start()
+
+
+if __name__ == "__main__":
+    cli()
