@@ -113,6 +113,14 @@ class ChatServer:
     def check_queue(self):
         if not self.waiting_queue.empty():
             conn = self.waiting_queue.get()
+
+            try:
+                protocol.write(conn, "You're almost there...")
+            except (BrokenPipeError, ConnectionResetError):
+                print("Next in queue has already left.")
+                self.check_queue()
+                return
+
             self.accept_connection(conn, conn.getsockname())
 
 
