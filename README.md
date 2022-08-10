@@ -1,5 +1,7 @@
 # TCP Chat
 
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct-single.svg)](https://stand-with-ukraine.pp.ua)
+
 > Most of the project was generated using GitHub Copilot
 
 This is a simple TCP Chat CLI in Python.
