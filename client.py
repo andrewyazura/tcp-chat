@@ -20,7 +20,7 @@ class ChatClient:
             message = ""
 
             while not message:
-                message = input("you: ")
+                message = input()
 
             protocol.write(self.conn, message)
 
