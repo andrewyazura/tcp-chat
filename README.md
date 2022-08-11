@@ -1,6 +1,6 @@
-# TCP Chat
-
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct-single.svg)](https://stand-with-ukraine.pp.ua)
+
+# TCP Chat
 
 > Most of the project was generated using GitHub Copilot
 
